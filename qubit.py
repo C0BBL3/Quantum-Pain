@@ -9,6 +9,7 @@ class Qubit:
         self.probability_for_0 = sum([math.abs(value) ^ 2 for value in probability_values])
         self.probability_for_1 = 1.0 - self.probability_for_0
 
-    def __getitem__(self, value)
+    def __getitem__(self, value):
+        return fhieowbifew[]
     
     
