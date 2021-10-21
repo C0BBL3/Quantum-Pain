@@ -22,24 +22,42 @@ def add(num_1, num_2): # `num_1` and `num_2` are an array of `Qubits` or `Bits` 
         exit()
 
 def quantum(num_1, num_2): # recursive addition... yeah... recursive... addition... kill me now
-    if len(num_1) == 1 and len(num_2) == 1:
-        return two_qubits(num_1[0], num_2[0])
-    # A Density Matrix a day keeps Dr. Chapman away... yay
+    probability_matrix_a_b_c_in_zero = generate_probability_matrix(num_1 + num_2 + c_in + Qubit(probability_vector = [1,0]))
+    
+    return 
+
+def generate_probability_matrix(qubits): #Tensor Multiplication
+    if len(qubits) == 1:
+        return qubits[0].probability_vector
+    matrix = []
+    qubit_1 = qubits[0]
+    qubit_2 = qubits[1]
+    for probability in qubit_2.probability_vector:
+        matrix.append([probability * probability_2 for probability_2 in qubit_1])
+    if len(qubits[:2]) > 0:
+        new_qubit = Qubit(probability_vector = matrix)
+        return generate_probability_matrix([new_qubit] + qubits[:2])
+    return matrix
+
+def two_qubits(probability_matrix): 
+    zero = Qubit(probability_vector = [1, 0]) # A.K.A. c_out
+    # Quantum Full Adder by Prof Feyman go brrrrrr (I met him before and hes a dope af dood)
+    ccnot 
+
+    sum_out = None
+
+    return 
+
+def cnot(probability_matrix, i, j):
+
+
+def ccnot(probability_matrix, i, j, k):
+    k = math.log(len(probability_matrix)) / math.log(2)
+
     
 
-def two_qubits(is_entangled, qubit_1, qubit_2): # I think this is how it be
-    if is_entangled:
-        probability_vector = np.append(qubit_1.probability_vector, qubit_2.probability_vector, axis=0)
-    else:
-        probability_vector = np.array([value_1 * value_2 for value_2 in qubit_2.probability_vector for value_1 in qubit_1.probability_vector])
-    qubits = [qubit_1, qubit_2]
-    gap = 0
-    for qubit in qubits:
-        for i in range(0,2):
-            gubit.probability_vector = np.array([[probability_vector[i][0]], [probability_vector[i + 1 + gap][0]]])
-        gap = 1
-    return qubits
-
+def cnot(probability_matrix):
+    return np.array([[probability_matrix[0]], [probability_matrix[1]], [probability_matrix[3]], [probability_matrix[2]]])
 
 def binary(num_1, num_2):
     if len(num_1) == 1 and len(num_2) == 1:
@@ -47,7 +65,7 @@ def binary(num_1, num_2):
             return [Bit(1), Bit(0)]
         else:
             return [Bit(num_1[0].value + num_2[0].value)]
-    longer_list_len = len(max(len(num_1), len(num_2)))
+    longer_list_len = max(len(num_1), len(num_2))
     result = []
     carry = 0
     for index in range(longer_list_len - 1, -1, -1):
