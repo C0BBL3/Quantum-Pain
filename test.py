@@ -1,9 +1,7 @@
 from addition import add
-from bit import Bit
 from qubit import Qubit
+import math
 
-num_1 = [Bit(1), Bit(1), Bit(0), Bit(1)]
-num_2 = [Bit(1), Bit(0), Bit(0)]
-sum_ = add(num_1, num_2)
+print(add([0], [1])[0]) # 1
 
-print(sum_)
+print(add([Qubit(probability_vector = [math.sqrt(0.99), math.sqrt(0.01)])], [Qubit(probability_vector = [math.sqrt(0.01), math.sqrt(0.99)])])) # 1

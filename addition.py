@@ -1,7 +1,7 @@
-from bit import Bit
 from qubit import Qubit
 import numpy as np
 import math
+from random import choices
 
 
 def add(num_1, num_2): # `num_1` and `num_2` are an array of `Qubits` or `Bits` but not both in the same list
@@ -21,70 +21,96 @@ def add(num_1, num_2): # `num_1` and `num_2` are an array of `Qubits` or `Bits` 
         print(va)
         exit()
 
-def quantum(num_1, num_2): # recursive addition... yeah... recursive... addition... kill me now
-    probability_matrix_a_b_c_in_zero = generate_probability_matrix(num_1 + num_2 + c_in + Qubit(probability_vector = [1,0]))
-    
-    return 
+def quantum(num_1, num_2):
+    if len(num_1) == 1 and len(num_2) == 1:
+        return two_qubit_quantum_system(num_1, num_2)
+    else:
+        #ahhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+        return 'fuck you im not doing this now'
+
+
+def two_qubit_quantum_system(num_1, num_2, c_in = Qubit()): # recursive addition... yeah... recursive... addition... kill me now
+    # This is the full adder algorithm by Prof Feyman
+    num_1[0].name = ' a '
+    num_2[0].name = ' b '
+    c_in.name = ' c in '
+    probability_matrix_a_b_c_in_zero, bit_strings = generate_probability_matrix(num_1 + num_2 + [c_in] + [Qubit(probability_vector = [math.sqrt(0.99),math.sqrt(0.01)], name = 'zero')])
+    new_probability_matrix = ccnot(probability_matrix_a_b_c_in_zero, bit_strings, swaps=[0,1,3]) # Each of the following operations returns a matrix with a probability for each possible outcome. 
+    new_probability_matrix = cnot(new_probability_matrix, bit_strings, swaps=[0,1])
+    new_probability_matrix = ccnot(new_probability_matrix, bit_strings, swaps=[1,2,3])
+    new_probability_matrix = cnot(new_probability_matrix, bit_strings, swaps=[1,2])
+    new_probability_matrix = cnot(new_probability_matrix, bit_strings, swaps=[0,1]) # optional
+    observation = observe(new_probability_matrix, bit_strings) # Returns a list of bits
+    if observation[2] == 0:
+        return str(observation[3])
+    else:
+        return str(observation[2]) + str(observation[3])
 
 def generate_probability_matrix(qubits): #Tensor Multiplication
-    if len(qubits) == 1:
-        return qubits[0].probability_vector
+    k = 2 ** len(qubits)
     matrix = []
-    qubit_1 = qubits[0]
-    qubit_2 = qubits[1]
-    for probability in qubit_2.probability_vector:
-        matrix.append([probability * probability_2 for probability_2 in qubit_1])
-    if len(qubits[:2]) > 0:
-        new_qubit = Qubit(probability_vector = matrix)
-        return generate_probability_matrix([new_qubit] + qubits[:2])
-    return matrix
+    bit_strings = []
+    for row_index in range(k):
+        binary = list(format(row_index, "b"))
+        binary = ['0' for _ in range(len(qubits) - len(binary))] + binary
+        bit_strings.append([int(value) for value in binary])
+        temp = 1
+        for qubit_index, qubit in enumerate(qubits):
+            vector_index = int(binary[qubit_index])
+            temp *= qubit.probability_vector[vector_index]
+        matrix.append(temp)
+    return matrix, bit_strings
 
-def two_qubits(probability_matrix): 
-    zero = Qubit(probability_vector = [1, 0]) # A.K.A. c_out
-    # Quantum Full Adder by Prof Feyman go brrrrrr (I met him before and hes a dope af dood)
-    ccnot 
+def ccnot(probability_matrix, bit_strings, swaps, check_if_swap = lambda bit_string, swaps: bit_string[swaps[0]] == 1 and bit_string[swaps[1]] == 1 and bit_string[swaps[2]] == 0): 
+    #i, j, k = swaps # i | on, j | on, k | off
+    return cnot(probability_matrix, bit_strings, swaps, check_if_swap)
 
-    sum_out = None
+def cnot(probability_matrix, bit_strings, swaps, check_if_swap = lambda bit_string, swaps: bit_string[swaps[0]] == 1 and bit_string[swaps[1]] == 0):
+    #i, j = swaps # i | on, j | off
+    new_probability_matrix = [probability for probability in probability_matrix]
+    for x, bit_string in enumerate(bit_strings):
+        temp = [bit for bit in bit_string]
+        if check_if_swap(bit_string, swaps):
+            conjugate = bit_string[:swaps[-1]] + [1] + bit_string[swaps[-1] + 1:]
+            y = bit_strings.index(conjugate)
+            new_probability_matrix = swap_rows(new_probability_matrix, x, y)
+    return new_probability_matrix
 
-    return 
+def swap_rows(probability_matrix, x, y):
+    new_probability_matrix = [probability for probability in probability_matrix]
+    new_probability_matrix[x] = probability_matrix[y]
+    new_probability_matrix[y] = probability_matrix[x]
+    return new_probability_matrix
 
-def cnot(probability_matrix, i, j):
-
-
-def ccnot(probability_matrix, i, j, k):
-    k = math.log(len(probability_matrix)) / math.log(2)
-
-    
-
-def cnot(probability_matrix):
-    return np.array([[probability_matrix[0]], [probability_matrix[1]], [probability_matrix[3]], [probability_matrix[2]]])
+def observe(probability_matrix, bit_strings):
+    return choices(bit_strings, [probability * 100.0 for probability in probability_matrix])[0]
 
 def binary(num_1, num_2):
     if len(num_1) == 1 and len(num_2) == 1:
-        if num_1[0].value + num_2[0].value > 1:
-            return [Bit(1), Bit(0)]
+        if num_1[0] + num_2[0] > 1:
+            return [1, 0]
         else:
-            return [Bit(num_1[0].value + num_2[0].value)]
+            return [num_1[0] + num_2[0]]
     longer_list_len = max(len(num_1), len(num_2))
-    result = []
+    bit_string = []
     carry = 0
     for index in range(longer_list_len - 1, -1, -1):
         temp = carry
         temp += 1 if num_1[index] == 1 else 0
         temp += 1 if num_2[index] == 1 else 0
-        result = [(Bit(1) if temp % 2 == 1 else Bit(0))] + result
+        bit_string = [(1 if temp % 2 == 1 else 0)] + bit_string
     
         carry = 0 if temp < 2 else 1
     
     if carry != 0:
-        result = [Bit(1)] + result  
+        bit_string = [1] + bit_string  
 
-    return result + [0 for _ in range(0, len(longer_list_len) - len(result))]
+    return bit_string + [0 for _ in range(0, len(longer_list_len) - len(bit_string))]
 
 
 def check_if_list_is_mixed(num_list):
     qubit_count = [isinstance(num, Qubit) for num in num_list].count(True)
-    bit_count = [isinstance(num, Bit) for num in num_list].count(True)
+    bit_count = [isinstance(num, int) for num in num_list].count(True)
     if qubit_count > 0 and bit_count > 0:
-        return True
-    return False
+        return False
+    return True
