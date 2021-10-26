@@ -29,12 +29,12 @@ def quantum(num_1, num_2):
         return 'fuck you im not doing this now'
 
 
-def two_qubit_quantum_system(num_1, num_2, c_in = Qubit()): # recursive addition... yeah... recursive... addition... kill me now
+def two_qubit_quantum_system(num_1, num_2, c_in = Qubit(probability_vector = [0,0])): # recursive addition... yeah... recursive... addition... kill me now
     # This is the full adder algorithm by Prof Feyman
     num_1[0].name = ' a '
     num_2[0].name = ' b '
     c_in.name = ' c in '
-    probability_matrix_a_b_c_in_zero, bit_strings = generate_probability_matrix(num_1 + num_2 + [c_in] + [Qubit(probability_vector = [math.sqrt(0.99),math.sqrt(0.01)], name = 'zero')])
+    probability_matrix_a_b_c_in_zero, bit_strings = generate_probability_matrix(num_1 + num_2 + [c_in] + [Qubit(probability_vector = [1, 0], name = 'zero')])
     new_probability_matrix = ccnot(probability_matrix_a_b_c_in_zero, bit_strings, swaps=[0,1,3]) # Each of the following operations returns a matrix with a probability for each possible outcome. 
     new_probability_matrix = cnot(new_probability_matrix, bit_strings, swaps=[0,1])
     new_probability_matrix = ccnot(new_probability_matrix, bit_strings, swaps=[1,2,3])
