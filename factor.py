@@ -20,6 +20,6 @@ def factor(number):
         print(exc)
         exit()
 
-def quantum(number):
+#def quantum(number):
 
-def binary(number):
+#def binary(number):
