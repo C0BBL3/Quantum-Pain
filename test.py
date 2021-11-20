@@ -1,4 +1,5 @@
 from addition import add
+from subtraction import subtract
 from addition import generate_quantum_system
 from qubit import Qubit
 
@@ -41,5 +42,9 @@ print('Conventional:', add([1,0,0,0,1,1], [1,0,1,1,1])) # 100011 + 10111 = 11101
 print('Quantum:', add(generate_quantum_system('100011'), generate_quantum_system('10111'))) # 100011 + 10111 = 111010
 
 print('\n1234 + 4321 = 5555 = 1010110110011')
-print('Conventional:', add([1,0,0,1,1,0,1,0,0,1,0], [1,0,0,0,0,1,1,1,0,0,0,0,1])) # 100011 + 10111 = 1010110110011
-print('Quantum:', add(generate_quantum_system('10011010010'), generate_quantum_system('1000011100001'))) # 100011 + 10111 = 1010110110011
+print('Conventional:', add([1,0,0,1,1,0,1,0,0,1,0], [1,0,0,0,0,1,1,1,0,0,0,0,1])) # 10011010010 + 1000011100001 = 1010110110011
+print('Quantum:', add(generate_quantum_system('10011010010'), generate_quantum_system('1000011100001'))) # 10011010010 + 1000011100001 = 1010110110011
+
+print('\n4321 - 1234 = 3087 = 110000001111')
+print('Conventional:', subtract([1,0,0,0,0,1,1,1,0,0,0,0,1], [1,0,0,1,1,0,1,0,0,1,0])) # 1000011100001 - 10011010010  = 110000001111
+print('Quantum:', subtract(generate_quantum_system('1000011100001'), generate_quantum_system('10011010010'))) # 1000011100001 - 10011010010 = 110000001111

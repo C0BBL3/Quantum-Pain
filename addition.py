@@ -54,7 +54,7 @@ def quantum(qs_1, qs_2):
             result.append(sum_[1])
         return ''.join(result[::-1])
 
-def two_qubits(q_1, q_2, c_in = Qubit(probability_vector = [1,0]), zero = Qubit(probability_vector = [1,0])): # recursive addition... yeah... recursive... addition... kill me now
+def two_qubits(q_1, q_2, c_in = Qubit(probability_vector = [1,0]), zero = Qubit(probability_vector = [1,0])): 
     # This is the full adder algorithm by Prof Feyman
     probability_matrix_a_b_c_in_zero = generate_probability_matrix([q_1] + [q_2] + [c_in] + [zero])
     new_probability_matrix = ccnot(probability_matrix_a_b_c_in_zero, swaps=[0,1,3]) # Each of the following operations returns a matrix with a probability for each possible outcome. 
